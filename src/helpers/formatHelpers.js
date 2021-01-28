@@ -24,8 +24,23 @@ export const shortenNumberDisplay = (num) => {
   if (num > 1000000){
     return `${(num / 1000000).toString()}m`;
   } else if (num > 1000){
-    return `${(num  / 1000).toString()}k`;
+    return `${(num / 1000).toString()}k`;
   } else {
     return num.toString();
   }
+};
+
+/**
+ * Formats the jurisdiction name from the vaccine JSON data to its display value.
+ * @param {string} jurisdiction The jurisdiction.
+ * @returns {string} The formatted jurisdiction display.
+ */
+export const getJurisdictionDisplay = (jurisdiction) => {
+  let display = jurisdiction.trim();
+
+  if (jurisdiction === 'Total') {
+    display += ' (U.S.)';
+  }
+
+  return display;
 };

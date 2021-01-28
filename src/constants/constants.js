@@ -6,5 +6,5 @@ export const VaccineManufacturers = Object.freeze({
 export const ChartColors = Object.freeze({
   BLUE: '#1a75ff',
   RED: '#ff1a1a',
-  BLACK: '#000000',
+  PURPLE: '#9900cc',
 });

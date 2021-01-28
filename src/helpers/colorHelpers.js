@@ -7,6 +7,6 @@ export const getBarColor = (manufacturer) => {
     case(VaccineManufacturers.MODERNA):
       return ChartColors.RED;
     default:
-      return ChartColors.BLACK;
+      return ChartColors.PURPLE;
   }
 };

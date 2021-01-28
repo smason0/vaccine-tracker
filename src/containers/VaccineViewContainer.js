@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import VaccineView from '../components/VaccineView';
 
+import VaccineView from '../components/VaccineView';
 import { loadVaccineAllocations } from '../actions/loadVaccineAllocations';
 
 const VaccineViewContainer = (props) => {

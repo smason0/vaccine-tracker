@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import VaccineViewContainer from './containers/VaccineViewContainer';
 import store from './store/store';
 
-function App() {
+function App(): {} {
   return (
     <Provider store={store} >
       <VaccineViewContainer />

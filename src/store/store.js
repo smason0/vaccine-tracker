@@ -1,4 +1,5 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import type { Store } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import vaccineAllocationsReducer from '../reducers/vaccineAllocationsReducers';
@@ -8,9 +9,9 @@ const sagaMiddleware = createSagaMiddleware();
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(
+const store: Store<any, any> = createStore(
   combineReducers({ vaccineAllocationsState: vaccineAllocationsReducer }),
-  composeEnhancers(applyMiddleware(sagaMiddleware))
+  composeEnhancers(applyMiddleware(sagaMiddleware)),
 );
 
 export default store;

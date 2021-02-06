@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
@@ -6,7 +6,17 @@ import { getBarColor } from '../helpers/colorHelpers';
 import { getJurisdictionData, getManufacturerByDataKey } from '../helpers/dataHelpers';
 import { dateFormatter, numberFormatter, shortenNumberDisplay } from '../helpers/formatHelpers';
 
-const VaccineBarChart = ({vaccineAllocations, jurisdiction, combinedBars}) => {
+import type { VaccineAllocationsT } from '../types/flowTypes';
+
+type PropsT = {|
+  vaccineAllocations: VaccineAllocationsT,
+  jurisdiction?: string,
+  combinedBars?: boolean,
+|};
+
+const VaccineBarChart = (props: PropsT): React.Node => {
+  const { vaccineAllocations, jurisdiction, combinedBars } = props;
+
   const data = getJurisdictionData(vaccineAllocations, jurisdiction, combinedBars);
   const dataKeys = data.length ? Object.keys(data[0]).slice(1) : [];
 

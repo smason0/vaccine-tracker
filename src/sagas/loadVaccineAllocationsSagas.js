@@ -1,23 +1,27 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import axios from 'axios';
 
-function getVaccineAllocations() {
+import { vaccineAllocationsReceived } from '../actions/vaccineAllocationsReceived';
+import { vaccineAllocationsError } from '../actions/vaccineAllocationsError';
+
+function getVaccineAllocations(): Promise<any> {
   const url = '/vaccines';
 
   return axios.get(url);
 };
 
-function* loadVaccineAllocations(_action) {
+function* loadVaccineAllocations(_action): Saga<void> {
   try {
     const response = yield call(getVaccineAllocations);
 
-    yield put({ type: 'VACCINE_ALLOCATIONS_RECIEVED', vaccines: response.data });
+    yield put(vaccineAllocationsReceived(response.data));
   } catch(error) {
-    yield put({ type: 'VACCINE_ALLOCATIONS_ERROR' });
+    yield put(vaccineAllocationsError());
   }
 }
 
-function* loadVaccineAllocationsWatcher() {
+function* loadVaccineAllocationsWatcher(): Saga<void> {
   yield takeLatest('LOAD_VACCINE_ALLOCATIONS', loadVaccineAllocations);
 }
 

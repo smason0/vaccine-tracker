@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -13,12 +13,20 @@ import { getJurisdictionList, getTotalFirstDoses } from '../helpers/dataHelpers'
 import { numberFormatter, getJurisdictionDisplay } from '../helpers/formatHelpers';
 import VaccineBarChart from './VaccineBarChart';
 
+import type { VaccineAllocationsT } from '../types/flowTypes';
+
+type PropsT = {|
+  vaccineAllocations: VaccineAllocationsT,
+|};
+
 const ITEM_HEIGHT = 48;
 
-const VaccineView = ({vaccineAllocations}) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [combinedBars, setCombinedBars] = useState(false);
-  const [jurisdiction, setJurisdiction] = useState('Total');
+const VaccineView = (props: PropsT): React.Node => {
+  const { vaccineAllocations } = props;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [combinedBars, setCombinedBars] = React.useState(false);
+  const [jurisdiction, setJurisdiction] = React.useState('Total');
 
   const options = getJurisdictionList(vaccineAllocations);
 
@@ -37,7 +45,7 @@ const VaccineView = ({vaccineAllocations}) => {
     handleClose();
   };
 
-  const toggleCheckbox = useCallback(() => {
+  const toggleCheckbox = React.useCallback(() => {
     setCombinedBars(val => !val);
   }, []);
 

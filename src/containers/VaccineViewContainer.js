@@ -1,13 +1,25 @@
-import React, { useEffect } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import VaccineView from '../components/VaccineView';
 import { loadVaccineAllocations } from '../actions/loadVaccineAllocations';
 
-const VaccineViewContainer = (props) => {
+import type { VaccineAllocationsT } from '../types/flowTypes';
+
+type OwnPropsT = {||};
+
+type PropsT = {|
+  ...OwnPropsT,
+  error: boolean,
+  loading: boolean,
+  vaccineAllocations: VaccineAllocationsT,
+  loadVaccineAllocations: () => void,
+|};
+
+const VaccineViewContainer = (props: PropsT) => {
   const { error, loading, vaccineAllocations, loadVaccineAllocations } = props;
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadVaccineAllocations();
   }, [loadVaccineAllocations]);
 
@@ -33,7 +45,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   loadVaccineAllocations: () => {
     dispatch(loadVaccineAllocations());
-  }
+  },
 });
 
+// $FlowFixMe
 export default connect(mapStateToProps, mapDispatchToProps)(VaccineViewContainer);

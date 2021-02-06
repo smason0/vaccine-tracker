@@ -6,21 +6,21 @@ import moment from 'moment';
  * @param {string} dateStr Date string to format.
  * @returns {string} The formatted date string.
  */
-export const dateFormatter = dateStr => moment(dateStr, 'YYYY-MM-DD').format('MMM DD');
+export const dateFormatter = (dateStr: string): string => moment(dateStr, 'YYYY-MM-DD').format('MMM DD');
 
 /**
  * Formats the given number by locale.
- * @param {number} num The number to format.
+ * @param {string} num The number to format.
  * @returns {string} The formatted number string.
  */
-export const numberFormatter = num => Number(num).toLocaleString();
+export const numberFormatter = (num: string): string => parseInt(num).toLocaleString();
 
 /**
  * Shortens the given number and appends the corresponding suffix (k, m) if applicable.
  * @param {number} num The number to shorten.
  * @returns {string} The shortened number string.
  */
-export const shortenNumberDisplay = (num) => {
+export const shortenNumberDisplay = (num: number): string => {
   if (num > 1000000){
     return `${(num / 1000000).toString()}m`;
   } else if (num > 1000){
@@ -35,7 +35,7 @@ export const shortenNumberDisplay = (num) => {
  * @param {string} jurisdiction The jurisdiction.
  * @returns {string} The formatted jurisdiction display.
  */
-export const getJurisdictionDisplay = (jurisdiction) => {
+export const getJurisdictionDisplay = (jurisdiction: string): string => {
   let display = jurisdiction.trim();
 
   if (jurisdiction === 'Total') {

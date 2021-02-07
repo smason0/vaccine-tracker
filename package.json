@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "axios": "^0.21.1",
+    "classnames": "^2.2.6",
     "flow-bin": "0.143.1",
     "moment": "^2.29.1",
     "react": "^17.0.1",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.19.0",
-    "eslint-plugin-flowtype": "^5.2.0"
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-react": "^7.22.0"
   }
 }

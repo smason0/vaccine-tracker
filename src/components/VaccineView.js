@@ -1,19 +1,21 @@
 import * as React from 'react';
+import classNames from 'classnames/bind';
 
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { getJurisdictionList, getTotalFirstDoses } from '../helpers/dataHelpers';
 import { numberFormatter, getJurisdictionDisplay } from '../helpers/formatHelpers';
 import VaccineBarChart from './VaccineBarChart';
+import styles from './VaccineView.css';
 
 import type { VaccineAllocationsT } from '../types/flowTypes';
+
+const cx = classNames.bind(styles);
 
 type PropsT = {|
   vaccineAllocations: VaccineAllocationsT,
@@ -50,70 +52,79 @@ const VaccineView = (props: PropsT): React.Node => {
   }, []);
 
   return (
-    <div>
-      <h1>Vaccine Tracker</h1>
-      <div className="checkbox">
-        <FormControl component="fieldset" >
-          <FormLabel component="legend">Filter Options</FormLabel>
-          <FormGroup>
+    <div className={cx('vaccine-view')}>
+      <h1 className={cx('vaccine-view-title')}>COVID-19 Vaccine Tracker</h1>
+      <div className={cx('vaccine-view-content')}>
+        <Menu
+          id="jurisdiction-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={open}
+          onClose={handleClose}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          PaperProps={{
+            style: {
+              maxHeight: ITEM_HEIGHT * 4.5,
+              width: '25ch',
+            },
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option} onClick={() => handleMenuItemSelected(option)}>
+              {getJurisdictionDisplay(option)}
+            </MenuItem>
+          ))}
+        </Menu>
+        <Button
+          className={cx('select-jurisdiction-button')}
+          aria-controls="customized-menu"
+          aria-haspopup="true"
+          variant="contained"
+          color="primary"
+          onClick={handleClick}
+        >
+          Select Jurisdiction
+        </Button>
+        <h2 className={cx('vaccine-chart-title')}>
+          {
+            `${getJurisdictionDisplay(jurisdiction)} - ` +
+            `${numberFormatter(getTotalFirstDoses(vaccineAllocations, jurisdiction))} total vaccines†`
+          }
+        </h2>
+        <VaccineBarChart
+          vaccineAllocations={vaccineAllocations}
+          combinedBars={combinedBars}
+          jurisdiction={jurisdiction}
+        />
+        <div className={cx('filter-options-checkbox')}>
+          <FormControl component="fieldset" >
             <FormControlLabel
               control={<Checkbox checked={combinedBars} onChange={toggleCheckbox} name="combined" />}
-              label="Combine bars"
+              label="Combine manufacturers"
             />
-          </FormGroup>
-        </FormControl>
+          </FormControl>
+        </div>
+        <p>
+          {
+            '* Marshall Islands, Micronesia, Palau will not receive Pfizer vaccines due to logistical considerations \
+            with ultra-cold requirements. ** Jurisdiction will receive first and second doses simultaneously to \
+            optimize transportation logistics. A sub-set of these jurisdictions are also receiving expected \
+            allocations for the remainder of the month pulled forward. ***Jurisdiction will receive a "Sovereign \
+            Nation Supplement" for American Indian/Alaskan Native populations that elected to receive vaccines through \
+            the state instead of Indian Health Service. **** Federal Entities includes; Bureau of Prisons, Dept. of \
+            Defense, Dept. of State, Indian Health Service, & Veterans Affairs + Dept. of Homeland Security. ~San \
+            Antonio and Houston jurisdiction allocations consolidated with Texas. † First doses only.'
+          }
+        </p>
       </div>
-      <Button
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
-      >
-        Select Jurisdiction
-      </Button>
-      <Menu
-        id="jurisdiction-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            maxHeight: ITEM_HEIGHT * 4.5,
-            width: '25ch',
-          },
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem key={option} onClick={() => handleMenuItemSelected(option)}>
-            {getJurisdictionDisplay(option)}
-          </MenuItem>
-        ))}
-      </Menu>
-      <h2>
-        {
-          `${getJurisdictionDisplay(jurisdiction)} - ` +
-          `${numberFormatter(getTotalFirstDoses(vaccineAllocations, jurisdiction))} total vaccines†`
-        }
-      </h2>
-      <VaccineBarChart
-        vaccineAllocations={vaccineAllocations}
-        combinedBars={combinedBars}
-        jurisdiction={jurisdiction}
-      />
-      <p>
-        {
-          '* Marshall Islands, Micronesia, Palau will not receive Pfizer vaccines due to logistical considerations \
-          with ultra-cold requirements. ** Jurisdiction will receive first and second doses simultaneously to optimize \
-          transportation logistics. A sub-set of these jurisdictions are also receiving expected allocations for the \
-          remainder of the month pulled forward. ***Jurisdiction will receive a "Sovereign Nation Supplement" for \
-          American Indian/Alaskan Native populations that elected to receive vaccines through the state instead of \
-          Indian Health Service. **** Federal Entities includes; Bureau of Prisons, Dept. of Defense, Dept. of State, \
-          Indian Health Service, & Veterans Affairs + Dept. of Homeland Security. ~San Antonio and Houston \
-          jurisdiction allocations consolidated with Texas. † First doses only.'
-        }
-      </p>
     </div>
   );
 };

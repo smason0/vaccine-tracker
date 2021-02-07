@@ -1,12 +1,12 @@
 import moment from 'moment';
 
 /**
- * Formats the given date from YYYY-MM-DD format to MMM DD format.
- * @example '2021-01-14' becomes 'Jan 14'
+ * Formats the given date from YYYY-MM-DD format to MMM DD 'YY format.
+ * @example "2021-01-14" becomes "Jan 14 '21"
  * @param {string} dateStr Date string to format.
  * @returns {string} The formatted date string.
  */
-export const dateFormatter = (dateStr: string): string => moment(dateStr, 'YYYY-MM-DD').format('MMM DD');
+export const dateFormatter = (dateStr: string): string => moment(dateStr, 'YYYY-MM-DD').format('MMM DD \'YY');
 
 /**
  * Formats the given number by locale.
@@ -39,7 +39,7 @@ export const getJurisdictionDisplay = (jurisdiction: string): string => {
   let display = jurisdiction.trim();
 
   if (jurisdiction === 'Total') {
-    display += ' (U.S.)';
+    display = 'United States';
   }
 
   return display;

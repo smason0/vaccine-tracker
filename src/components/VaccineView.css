@@ -1,0 +1,21 @@
+.filter-options-checkbox {
+  margin-top: 15px;
+}
+
+.vaccine-chart-title {
+  text-align: center;
+}
+
+.vaccine-view {
+  max-width: 1200px;
+  min-width: 600px;
+}
+
+.vaccine-view-content {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.vaccine-view-title {
+  text-align: center;
+}

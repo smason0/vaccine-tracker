@@ -3,6 +3,7 @@
 .*/src/reportWebVitals\.js
 .*/src/index\.js
 .*\test.js
+.*/backend/.*
 
 [include]
 

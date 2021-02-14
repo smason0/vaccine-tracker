@@ -1,9 +1,11 @@
 [ignore]
 .*/node_modules/.*
+.*/build/.*
+.*/api/.*
+.*/venv/.*
 .*/src/reportWebVitals\.js
 .*/src/index\.js
 .*\test.js
-.*/backend/.*
 
 [include]
 

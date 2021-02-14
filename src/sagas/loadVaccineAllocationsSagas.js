@@ -6,7 +6,7 @@ import { vaccineAllocationsReceived } from '../actions/vaccineAllocationsReceive
 import { vaccineAllocationsError } from '../actions/vaccineAllocationsError';
 
 function getVaccineAllocations(): Promise<any> {
-  const url = '/vaccines';
+  const url = '/api/vaccines';
 
   return axios.get(url);
 };

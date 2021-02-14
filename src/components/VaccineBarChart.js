@@ -62,7 +62,7 @@ const VaccineBarChart = (props: PropsT): React.Node => {
           tickFormatter={shortenNumberDisplay}
         />
         <Tooltip formatter={numberFormatter} labelFormatter={dateFormatter} />
-        <Legend align="right" verticalAlign="top" layout="vertical" wrapperStyle={{ paddingLeft: '10px' }} />
+        <Legend align="right" verticalAlign="top" layout="horizontal" wrapperStyle={{ paddingLeft: '10px' }} />
         {bars}
       </BarChart>
     </ResponsiveContainer>

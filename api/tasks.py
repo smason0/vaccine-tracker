@@ -18,7 +18,7 @@ def get_vaccine_data():
     """
     Retrieves and parses Pfizer and Moderna vaccine data.
 
-    :returns: JSON containing the parsed data.
+    :return: Returns JSON containing the parsed data.
     """
     pfizer_data = client.get(pfizer_dataset_identifier)
     moderna_data = client.get(moderna_dataset_identifier)

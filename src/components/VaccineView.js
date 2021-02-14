@@ -72,7 +72,7 @@ const VaccineView = (props: PropsT): React.Node => {
           }}
           PaperProps={{
             style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
+              maxHeight: ITEM_HEIGHT * 5.5,
               width: '25ch',
             },
           }}
@@ -124,6 +124,7 @@ const VaccineView = (props: PropsT): React.Node => {
             Antonio and Houston jurisdiction allocations consolidated with Texas. † First doses only.'
           }
         </p>
+        <p>Source: data.cdc.gov</p>
       </div>
     </div>
   );

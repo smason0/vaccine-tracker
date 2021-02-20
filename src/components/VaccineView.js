@@ -28,6 +28,7 @@ const VaccineView = (props: PropsT): React.Node => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [combinedBars, setCombinedBars] = React.useState(false);
+  const [stackedBars, setStackedBars] = React.useState(false);
   const [jurisdiction, setJurisdiction] = React.useState('Total');
 
   const options = getJurisdictionList(vaccineAllocations);
@@ -47,8 +48,14 @@ const VaccineView = (props: PropsT): React.Node => {
     handleClose();
   };
 
-  const toggleCheckbox = React.useCallback(() => {
+  const toggleCombinedCheckbox = React.useCallback(() => {
     setCombinedBars(val => !val);
+    setStackedBars(false);
+  }, []);
+
+  const toggleStackedCheckbox = React.useCallback(() => {
+    setStackedBars(val => !val);
+    setCombinedBars(false);
   }, []);
 
   return (
@@ -96,19 +103,26 @@ const VaccineView = (props: PropsT): React.Node => {
         <h2 className={cx('vaccine-chart-title')}>
           {
             `${getJurisdictionDisplay(jurisdiction)} - ` +
-            `${numberFormatter(getTotalFirstDoses(vaccineAllocations, jurisdiction))} total vaccines†`
+            `${numberFormatter(getTotalFirstDoses(vaccineAllocations, jurisdiction))} vaccines distributed†`
           }
         </h2>
         <VaccineBarChart
           vaccineAllocations={vaccineAllocations}
           combinedBars={combinedBars}
+          stackedBars={stackedBars}
           jurisdiction={jurisdiction}
         />
         <div className={cx('filter-options-checkbox')}>
           <FormControl component="fieldset" >
             <FormControlLabel
-              control={<Checkbox checked={combinedBars} onChange={toggleCheckbox} name="combined" />}
-              label="Combine manufacturers"
+              control={<Checkbox checked={combinedBars} onChange={toggleCombinedCheckbox} name="combined" />}
+              label="Combined View"
+            />
+          </FormControl>
+          <FormControl component="fieldset" >
+            <FormControlLabel
+              control={<Checkbox checked={stackedBars} onChange={toggleStackedCheckbox} name="stacked" />}
+              label="Stacked View"
             />
           </FormControl>
         </div>

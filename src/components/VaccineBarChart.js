@@ -18,10 +18,11 @@ type PropsT = {|
   vaccineAllocations: VaccineAllocationsT,
   jurisdiction?: string,
   combinedBars?: boolean,
+  stackedBars?: boolean,
 |};
 
 const VaccineBarChart = (props: PropsT): React.Node => {
-  const { vaccineAllocations, jurisdiction, combinedBars } = props;
+  const { vaccineAllocations, jurisdiction, combinedBars, stackedBars } = props;
 
   const data = getJurisdictionData(vaccineAllocations, jurisdiction, combinedBars);
   const dataKeys = data.length ? Object.keys(data[0]).slice(1) : [];
@@ -34,6 +35,7 @@ const VaccineBarChart = (props: PropsT): React.Node => {
         dataKey={dataKey}
         key={manufacturer}
         fill={getBarColor(manufacturer)}
+        stackId={stackedBars ? 'x' : undefined}
         name={manufacturer || 'Total'}
       />
     );
@@ -58,7 +60,7 @@ const VaccineBarChart = (props: PropsT): React.Node => {
           scale="band"
         />
         <YAxis
-          label={{ value: 'Vaccines', angle: -90, offset: 0, position: 'insideLeft' }}
+          label={{ value: 'Vaccines distributed', angle: -90, offset: 0, position: 'insideLeft' }}
           tickFormatter={shortenNumberDisplay}
         />
         <Tooltip formatter={numberFormatter} labelFormatter={dateFormatter} />

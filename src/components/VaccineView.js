@@ -8,7 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { getJurisdictionList, getTotalFirstDoses } from '../helpers/dataHelpers';
+import { getJurisdictionList, getTotalDosesAmount } from '../helpers/dataHelpers';
 import { numberFormatter, getJurisdictionDisplay } from '../helpers/formatHelpers';
 import VaccineBarChart from './VaccineBarChart';
 import styles from './VaccineView.css';
@@ -103,7 +103,7 @@ const VaccineView = (props: PropsT): React.Node => {
         <h2 className={cx('vaccine-chart-title')}>
           {
             `${getJurisdictionDisplay(jurisdiction)} - ` +
-            `${numberFormatter(getTotalFirstDoses(vaccineAllocations, jurisdiction))} vaccines distributed†`
+            `${numberFormatter(getTotalDosesAmount(vaccineAllocations, jurisdiction))} vaccines distributed†`
           }
         </h2>
         <VaccineBarChart

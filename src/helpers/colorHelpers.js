@@ -11,7 +11,9 @@ export const getBarColor = (manufacturer: ?$Values<typeof VaccineManufacturers>)
       return ChartColors.BLUE;
     case(VaccineManufacturers.MODERNA):
       return ChartColors.RED;
-    default:
+    case(VaccineManufacturers.JANSSEN):
       return ChartColors.PURPLE;
+    default:
+      return ChartColors.GREEN;
   }
 };

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { VaccineManufacturers } from '../constants/constants';
 import type { VaccineAllocationsT } from '../types/flowTypes';
 
@@ -6,7 +5,7 @@ import type { VaccineAllocationsT } from '../types/flowTypes';
  * Parses and retrieves the vaccines distributed from each vaccine manufacturer by jurisdiction.
  * Note: Assumption is made that the week keys match between manufacturers.
  * @param {object} vaccineAllocations The vaccine allocations object to parse.
- * @param {string} jursdiction The jurisdiction for which to retrieve vaccine data.
+ * @param {string} jurisdiction The jurisdiction for which to retrieve vaccine data.
  * @param {boolean} combinedBars Indicates if the manufacturer data should be combined into one bar. Defaults to false.
  * @returns {object[]} The array of object containing total vaccine distribution data.
  */
@@ -24,51 +23,35 @@ export const getJurisdictionData = (
   const pfizerRows = getJurisdictionRows(vaccineAllocations.pfizer, jurisdiction);
   const modernaRows = getJurisdictionRows(vaccineAllocations.moderna, jurisdiction);
   const janssenRows = getJurisdictionRows(vaccineAllocations.janssen, jurisdiction);
-
-  function doses(row) {
-    return (row.doses ? parseInt(row.doses) : 0);
-  }
-
-  function sum(prev, next) {
-    return prev + next;
-  }
+  const weeks = getWeeks(vaccineAllocations);
 
   if (pfizerRows && modernaRows && janssenRows) {
     if (jurisdiction === 'Total') {
-      const weeks = [...new Set(pfizerRows.map((row) => row.week))];
       data = weeks.map((week) => {
-        const pfizerRowsForWeek = pfizerRows.filter((pfizerRow) => pfizerRow.week === week);
-        const modernaRowsForWeek = modernaRows.filter((modernaRow) => modernaRow.week === week);
-        const janssenRowsForWeek = janssenRows.filter((janssenRow) => janssenRow.week === week);
-
-        const totalPfizerDoses = pfizerRowsForWeek.length ? pfizerRowsForWeek.map(doses).reduce(sum) : 0;
-        const totalModernaDoses = modernaRowsForWeek.length ? modernaRowsForWeek.map(doses).reduce(sum) : 0;
-        const totalJanssenDoses = janssenRowsForWeek.length ? janssenRowsForWeek.map(doses).reduce(sum) : 0;
-
         return (combinedBars ? {
           week: week,
-          combinedVaccines: totalPfizerDoses + totalModernaDoses + totalJanssenDoses,
+          combinedVaccines: getWeeklyTotalDoses(pfizerRows, week) +
+                            getWeeklyTotalDoses(modernaRows, week) +
+                            getWeeklyTotalDoses(janssenRows, week),
         } : {
           week: week,
-          pfizerVaccines: totalPfizerDoses,
-          modernaVaccines: totalModernaDoses,
-          janssenVaccines: totalJanssenDoses,
+          pfizerVaccines: getWeeklyTotalDoses(pfizerRows, week),
+          modernaVaccines: getWeeklyTotalDoses(modernaRows, week),
+          janssenVaccines: getWeeklyTotalDoses(janssenRows, week),
         });
       });
     } else {
-      data = pfizerRows.map((row) => {
-        const modernaRow = modernaRows.find((modernaRow) => modernaRow.week === row.week);
-        const janssenRow = janssenRows.find((janssenRow) => janssenRow.week === row.week);
+      data = weeks.map((week) => {
         return (combinedBars ? {
-          week: row.week,
-          combinedVaccines: parseInt(row.doses) +
-                            parseInt(modernaRow ? modernaRow.doses : 0) +
-                            parseInt(janssenRow ? janssenRow.doses : 0),
+          week: week,
+          combinedVaccines: getWeeklyDoses(pfizerRows, week) +
+                            getWeeklyDoses(modernaRows, week) +
+                            getWeeklyDoses(janssenRows, week),
         } : {
-          week: row.week,
-          pfizerVaccines: parseInt(row.doses),
-          modernaVaccines: parseInt(modernaRow ? modernaRow.doses : 0),
-          janssenVaccines: parseInt(janssenRow ? janssenRow.doses : 0),
+          week: week,
+          pfizerVaccines: getWeeklyDoses(pfizerRows, week),
+          modernaVaccines: getWeeklyDoses(modernaRows, week),
+          janssenVaccines: getWeeklyDoses(janssenRows, week),
         });
       });
     }
@@ -80,10 +63,10 @@ export const getJurisdictionData = (
 /**
  * Retrieves the total number of first vaccine doses by jurisdiction.
  * @param {object} vaccineAllocations The vaccine allocations object to parse.
- * @param {string} jursdiction The jurisdiction for which to retrieve vaccine data.
+ * @param {string} jurisdiction The jurisdiction for which to retrieve vaccine data.
  * @returns {string} The total first doses.
  */
-export const getTotalFirstDoses = (vaccineAllocations: VaccineAllocationsT, jurisdiction: string): string => {
+export const getTotalDosesAmount = (vaccineAllocations: VaccineAllocationsT, jurisdiction: string): string => {
   let totalFirstDoses = 0;
   
   if (!Object.keys(vaccineAllocations).length) {
@@ -93,13 +76,14 @@ export const getTotalFirstDoses = (vaccineAllocations: VaccineAllocationsT, juri
   const pfizerRows = getJurisdictionRows(vaccineAllocations.pfizer, jurisdiction);
   const modernaRows = getJurisdictionRows(vaccineAllocations.moderna, jurisdiction);
   const janssenRows = getJurisdictionRows(vaccineAllocations.janssen, jurisdiction);
+  const weeks = getWeeks(vaccineAllocations);
 
   if (pfizerRows && modernaRows && janssenRows) {
-    pfizerRows.forEach((row, index) => {
+    weeks.forEach(week => {
       totalFirstDoses += (
-        parseInt(row.doses) +
-        parseInt(modernaRows[index] ? modernaRows[index].doses : 0) +
-        parseInt(janssenRows[index] ? janssenRows[index].doses : 0)
+        getWeeklyTotalDoses(pfizerRows, week) +
+        getWeeklyTotalDoses(modernaRows, week) +
+        getWeeklyTotalDoses(janssenRows, week)
       );
     });
   }
@@ -143,8 +127,12 @@ export const getManufacturerByDataKey = (dataKey: string): ?$Values<typeof Vacci
   return null;
 };
 
-const getJurisdictionRows = (vaccineAllocationsByManufacturer: Array<Object>, jurisdiction: string): Array<Object> => {
+const getJurisdictionRows = (vaccineAllocationsByManufacturer?: Array<any>, jurisdiction?: string): Array<Object> => {
   let rows = [];
+
+  if (!vaccineAllocationsByManufacturer || !jurisdiction) {
+    return rows;
+  }
   
   if (jurisdiction === 'Total') {
     rows = vaccineAllocationsByManufacturer;
@@ -154,4 +142,49 @@ const getJurisdictionRows = (vaccineAllocationsByManufacturer: Array<Object>, ju
   }
 
   return rows.sort((row, nextRow) => ((row.week < nextRow.week) ? -1 : ((row.week > nextRow.week) ? 1 : 0)));
+};
+
+const getWeeks = (vaccineAllocations: VaccineAllocationsT): Array<string> => {
+  const pfizerWeeks = vaccineAllocations.pfizer ?
+    [...new Set(vaccineAllocations.pfizer.map((row) => row.week))] : [];
+  const modernaWeeks = vaccineAllocations.moderna ?
+    [...new Set(vaccineAllocations.moderna.map((row) => row.week))] : [];
+  const janssenWeeks = vaccineAllocations.janssen ?
+    [...new Set(vaccineAllocations.janssen.map((row) => row.week))] : [];
+
+  return [...new Set([...pfizerWeeks, ...modernaWeeks, ...janssenWeeks])];
+};
+
+const getWeeklyDoses = (vaccineAllocationsByManufacturer?: Array<any>, week: string): number => {
+  let doses = 0;
+
+  if (!vaccineAllocationsByManufacturer) {
+    return doses;
+  }
+
+  const dataRow = vaccineAllocationsByManufacturer.find((row) => row.week === week);
+
+  if (dataRow && dataRow.doses) {
+    doses = parseInt(dataRow.doses) || 0;
+  }
+
+  return doses;
+};
+
+const getWeeklyTotalDoses = (vaccineAllocationsByManufacturer?: Array<any>, week: string): number => {
+  if (!vaccineAllocationsByManufacturer) {
+    return 0;
+  }
+
+  function doses(row) {
+    return (row.doses ? (parseInt(row.doses) || 0) : 0);
+  }
+
+  function sum(prev, next) {
+    return prev + next;
+  }
+
+  const dataRowsForWeek = vaccineAllocationsByManufacturer.filter((row) => row.week === week);
+
+  return dataRowsForWeek.length ? dataRowsForWeek.map(doses).reduce(sum) : 0;
 };

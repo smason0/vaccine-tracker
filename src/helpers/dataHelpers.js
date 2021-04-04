@@ -3,7 +3,6 @@ import type { VaccineAllocationsT } from '../types/flowTypes';
 
 /**
  * Parses and retrieves the vaccines distributed from each vaccine manufacturer by jurisdiction.
- * Note: Assumption is made that the week keys match between manufacturers.
  * @param {object} vaccineAllocations The vaccine allocations object to parse.
  * @param {string} jurisdiction The jurisdiction for which to retrieve vaccine data.
  * @param {boolean} combinedBars Indicates if the manufacturer data should be combined into one bar. Defaults to false.

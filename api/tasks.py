@@ -21,9 +21,9 @@ def get_vaccine_data():
 
     :return: Returns JSON containing the parsed data.
     """
-    pfizer_data = client.get(pfizer_dataset_identifier)
-    moderna_data = client.get(moderna_dataset_identifier)
-    janssen_data = client.get(janssen_dataset_identifier)
+    pfizer_data = client.get(pfizer_dataset_identifier, limit=50000)
+    moderna_data = client.get(moderna_dataset_identifier, limit=50000)
+    janssen_data = client.get(janssen_dataset_identifier, limit=50000)
 
     pfizer_df = pd.DataFrame.from_dict(pfizer_data)
     moderna_df = pd.DataFrame.from_dict(moderna_data)

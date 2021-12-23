@@ -30,6 +30,9 @@ const VaccineView = (props: PropsT): React.Node => {
   const [combinedBars, setCombinedBars] = React.useState(false);
   const [stackedBars, setStackedBars] = React.useState(false);
   const [jurisdiction, setJurisdiction] = React.useState('Total');
+  const [hidePfizer, setHidePfizer] = React.useState(false);
+  const [hideModerna, setHideModerna] = React.useState(false);
+  const [hideJanssen, setHideJanssen] = React.useState(false);
 
   const options = getJurisdictionList(vaccineAllocations);
 
@@ -56,6 +59,18 @@ const VaccineView = (props: PropsT): React.Node => {
   const toggleStackedCheckbox = React.useCallback(() => {
     setStackedBars(val => !val);
     setCombinedBars(false);
+  }, []);
+
+  const toggleHidePfizer = React.useCallback(() => {
+    setHidePfizer(val => !val);
+  }, []);
+
+  const toggleHideModerna = React.useCallback(() => {
+    setHideModerna(val => !val);
+  }, []);
+
+  const toggleHideJanssen = React.useCallback(() => {
+    setHideJanssen(val => !val);
   }, []);
 
   return (
@@ -111,6 +126,7 @@ const VaccineView = (props: PropsT): React.Node => {
           combinedBars={combinedBars}
           stackedBars={stackedBars}
           jurisdiction={jurisdiction}
+          filters={{ pfizer: !hidePfizer, moderna: !hideModerna, janssen: !hideJanssen }}
         />
         <div className={cx('filter-options-checkbox')}>
           <FormControl component="fieldset" >
@@ -123,6 +139,24 @@ const VaccineView = (props: PropsT): React.Node => {
             <FormControlLabel
               control={<Checkbox checked={stackedBars} onChange={toggleStackedCheckbox} name="stacked" />}
               label="Stacked View"
+            />
+          </FormControl>
+          <FormControl component="fieldset" >
+            <FormControlLabel
+              control={<Checkbox checked={hidePfizer} onChange={toggleHidePfizer} name="hidePfizer" />}
+              label="Hide Pfizer"
+            />
+          </FormControl>
+          <FormControl component="fieldset" >
+            <FormControlLabel
+              control={<Checkbox checked={hideModerna} onChange={toggleHideModerna} name="hideModerna" />}
+              label="Hide Moderna"
+            />
+          </FormControl>
+          <FormControl component="fieldset" >
+            <FormControlLabel
+              control={<Checkbox checked={hideJanssen} onChange={toggleHideJanssen} name="hideJanssen" />}
+              label="Hide Janssen"
             />
           </FormControl>
         </div>

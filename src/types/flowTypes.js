@@ -3,3 +3,9 @@ export type VaccineAllocationsT = {|
   moderna?: Array<any>,
   janssen?: Array<any>,
 |};
+
+export type ChartFiltersT = {|
+  pfizer: boolean,
+  moderna: boolean,
+  janssen: boolean,
+|};

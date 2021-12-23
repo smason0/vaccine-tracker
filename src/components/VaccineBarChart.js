@@ -6,7 +6,7 @@ import { getBarColor } from '../helpers/colorHelpers';
 import { getJurisdictionData, getManufacturerByDataKey } from '../helpers/dataHelpers';
 import { dateFormatter, numberFormatter, shortenNumberDisplay } from '../helpers/formatHelpers';
 
-import type { VaccineAllocationsT } from '../types/flowTypes';
+import type { VaccineAllocationsT, ChartFiltersT } from '../types/flowTypes';
 
 const CHART_HEIGHT = 500;
 const CHART_TOP_MARGIN = 10;
@@ -19,12 +19,13 @@ type PropsT = {|
   jurisdiction?: string,
   combinedBars?: boolean,
   stackedBars?: boolean,
+  filters?: ChartFiltersT,
 |};
 
 const VaccineBarChart = (props: PropsT): React.Node => {
-  const { vaccineAllocations, jurisdiction, combinedBars, stackedBars } = props;
+  const { vaccineAllocations, jurisdiction, combinedBars, stackedBars, filters } = props;
 
-  const data = getJurisdictionData(vaccineAllocations, jurisdiction, combinedBars);
+  const data = getJurisdictionData(vaccineAllocations, jurisdiction, combinedBars, filters);
   const dataKeys = data.length ? Object.keys(data[0]).slice(1) : [];
 
   const bars = dataKeys.map((dataKey) => {
